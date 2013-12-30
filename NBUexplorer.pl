@@ -13,7 +13,8 @@ use Getopt::Long;
 use File::Basename;
 use Sys::Hostname;
 use Data::Dumper;
-use feature 'say';
+use IO::Zlib;
+
 
 # Set some global vars
 my $OS = $^O;
@@ -39,9 +40,8 @@ if ($OS eq "MSWin32") {
 my %commands = (
     "bpdbjobs"      => ["$BPDBJOBSBIN", "-report -all_columns"],
     "bppllist"      => ["$BPPLLISTBIN", ""],
-    "ls"            => ["/bin/ls", "-latR $dumpdir"],
 );
-say Dumper(%commands);
+
 
 my %opt;
 my $help;
@@ -79,16 +79,17 @@ sub mk_dumpdir {
 
 sub mk_zipped_filename {
     # Return formatted filename
-    $_[0] =~ s/\ /\_/ig;
-    my $command = basename($_[0]);
-    my $dir = mk_dumpdir();
+    my $command_input = $_[0];
+    $command_input = basename($command_input);
+    $command_input =~ s/\ /\_/ig;
+    $command_input =~ s/\./\_/ig;
     my $ending;
     if ($OS eq "MSWin32") {
         $ending = "zip";
     } elsif (($OS =~ /darwin/) or ($OS eq "linux")) {
         $ending = "gz";
     }
-    return "$dir/$command.out.$ending";
+    return "$command_input.out.$ending";
 }
 
 sub dump_to_zip {
@@ -98,17 +99,30 @@ sub dump_to_zip {
 sub main {
     # Main logic
     my @files;
+    my $dir = mk_dumpdir();
+    my $binary;
+    my $longcmd;
+    my $filename;
+
     foreach my $command (keys %commands) {
         print "For command: $command, do:\n";
         my $binary = "$commands{$command}[0]";
         print "\tBinary: $binary\n";
+        
         my $longcmd = "@{$commands{$command}}";
-        print "\t$longcmd\n";
+        print "\tLongcmd: $longcmd\n";
+        
         my $filename = mk_zipped_filename($longcmd);
-        print "\tFilename: $filename\n";
+        print "\tFilename: $dir/$filename\n";
 
         if (-e $binary) {
             print "Binary exists, doing something\n";
+            print "DUMPDIR IS NOW: $dir, AND FILENAME IS NOW: $filename\n";
+            my $fh = IO::Zlib->new("$dir/$filename", "wb");
+            if (defined $fh) {
+                print $fh qx($longcmd);
+            }
+            $fh->close;
             push(@files, $filename);  # Insert generated file path into @files
         }
     }
