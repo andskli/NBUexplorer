@@ -20,6 +20,7 @@ use IO::Zlib;
 my $OS = $^O;
 my $HOSTNAME = hostname;
 my $dumpdir = dirname(__FILE__);  # set the default directory
+my $dumptime = time;
 
 # FIX PATHS TO BINARIES
 my $BPDBJOBSBIN;
@@ -70,8 +71,7 @@ output_usage() if ($help);
 
 sub mk_dumpdir {
     # Return formatted timestamp
-    my $t = time;
-    my $dir = "$dumpdir/dump_$t";
+    my $dir = "$dumpdir/dump_$dumptime";
     mkdir $dir unless (-d $dir);
     return "$dir";
 }
@@ -89,7 +89,7 @@ sub mk_zipped_filename {
     } elsif (($OS =~ /darwin/) or ($OS eq "linux")) {
         $ending = "gz";
     }
-    return "$command_input.out.$ending";
+    return "$command_input.$dumptime.out.$ending";
 }
 
 sub dump_to_zip {
@@ -106,9 +106,9 @@ sub main {
 
     foreach my $command (keys %commands) {
         my $binary = "$commands{$command}[0]";
-        
+
         my $longcmd = "@{$commands{$command}}";
-        
+
         my $filename = mk_zipped_filename($longcmd);
 
         if (-e $binary) {
