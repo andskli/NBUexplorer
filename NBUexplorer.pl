@@ -29,6 +29,8 @@ my $AVAILABLEMEDIABIN;
 my $GETLICENSEKEYBIN;
 my $BPCONFIGBIN;
 my $BPSYNCINFOBIN;
+my $BPMEDIALISTBIN;
+my $BPIMAGELISTBIN;
 if ($OS eq "MSWin32") {
     if (!$ENV{'NBU_INSTALLDIR'}) {
         die "Could not find NBU_INSTALLDIR environment variable\n";
@@ -41,6 +43,8 @@ if ($OS eq "MSWin32") {
     $GETLICENSEKEYBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\get_license_key\"";
     $BPCONFIGBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpconfig\"";
     $BPSYNCINFOBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpsyncinfo\"";
+    $BPMEDIALISTBIN = "\"$nbu_installdir\\NetBackup\\bin\admincmd\\bpmedialist\"";
+    $BPIMAGELISTBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpimagelist\"";
 } elsif (($OS =~ /darwin/) or ($OS eq "linux")) {
     my $nbu_installdir = "/usr/openv/netbackup";
     $BPPLLISTBIN = $nbu_installdir."/bin/admincmd/bppllist";
@@ -49,14 +53,21 @@ if ($OS eq "MSWin32") {
     $GETLICENSEKEYBIN = $nbu_installdir."/bin/admincmd/get_license_key";
     $BPCONFIGBIN = $nbu_installdir."/bin/admincmd/bpconfig";
     $BPSYNCINFOBIN = $nbu_installdir."/bin/admincmd/bpsyncinfo";
+    $BPMEDIALISTBIN = $nbu_installdir."/bin/admincmd/bpmedialist";
+    $BPIMAGELISTBIN = $nbu_installdir."/bin/admincmd/bpimagelist";
 }
 my %commands = (
-    "bpdbjobs"                      => ["$BPDBJOBSBIN", "-report -all_columns"],
-    "bppllist"                      => ["$BPPLLISTBIN", ""],
-    "available_media"               => ["$AVAILABLEMEDIABIN", ""],
-    "get_license_key_features"      => ["$GETLICENSEKEYBIN", "-L features"],
-    "get_license_key_keys"          => ["$GETLICENSEKEYBIN", "-L keys"],
-    "bpconfig"                      => ["$BPCONFIGBIN", "-U"],
+    "bpdbjobs_report_allcolumns"        => ["$BPDBJOBSBIN", "-report -all_columns"],
+    "bppllist_allpolicies_U"            => ["$BPPLLISTBIN", "-allpolicies -U"],
+    "available_media"                   => ["$AVAILABLEMEDIABIN", ""],
+    "get_license_key_features"          => ["$GETLICENSEKEYBIN", "-L features"],
+    "get_license_key_keys"              => ["$GETLICENSEKEYBIN", "-L keys"],
+    "bpconfig_U"                        => ["$BPCONFIGBIN", "-U"],
+    "bpmedialist_U_mlist"               => ["$BPMEDIALISTBIN", "-U -mlist"],
+    "bpmedialist_summary"               => ["$BPMEDIALISTBIN", "-summary"],
+    "bpemdialist_summary_brief"         => ["$BPMEDIALISTBIN", "-summary -brief"],
+    "bpimagelist_A_d_fromepoch"         => ["$BPIMAGELISTBIN", "-A -d 01/30/00 00:00:00"],
+    "bpimagelist_A_media_d_fromepoch"   => ["$BPIMAGELISTBIN", "-A -media -d 01/30/00 00:00:00"],
 );
 
 
@@ -95,17 +106,14 @@ sub mk_dumpdir {
 
 sub mk_zipped_filename {
     # Return formatted filename
-    my $command_input = $_[0];
-    $command_input = basename($command_input);
-    $command_input =~ s/\ /\_/ig;
-    $command_input =~ s/\./\_/ig;
+    my $filebasename = $_[0];
     my $ending;
     if ($OS eq "MSWin32") {
         $ending = "zip";
     } elsif (($OS =~ /darwin/) or ($OS eq "linux")) {
         $ending = "gz";
     }
-    return "$command_input.$dumptime.out.$ending";
+    return "$filebasename.$dumptime.out.$ending";
 }
 
 sub dump_to_zip {
@@ -128,7 +136,7 @@ sub main {
 
         my $longcmd = "$commands{$command}[0] $commands{$command}[1]";
         print "Longcmd: $longcmd\n";
-        my $filename = mk_zipped_filename($longcmd);
+        my $filename = mk_zipped_filename($command);
 
         print "Evaulating if [$longcmd] is to be run..\n";
 
