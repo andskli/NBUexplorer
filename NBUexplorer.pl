@@ -22,9 +22,13 @@ my $HOSTNAME = hostname;
 my $dumpdir = dirname(__FILE__);  # set the default directory
 my $dumptime = time;
 
-# FIX PATHS TO BINARIES
+# FIX PATHS TO BINARIES AND SETUP COMMANDS
 my $BPDBJOBSBIN;
 my $BPPLLISTBIN;
+my $AVAILABLEMEDIABIN;
+my $GETLICENSEKEYBIN;
+my $BPCONFIGBIN;
+my $BPSYNCINFOBIN;
 if ($OS eq "MSWin32") {
     if (!$ENV{'NBU_INSTALLDIR'}) {
         die "Could not find NBU_INSTALLDIR environment variable\n";
@@ -33,14 +37,27 @@ if ($OS eq "MSWin32") {
     chomp($nbu_installdir);
     $BPPLLISTBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bppllist\"";
     $BPDBJOBSBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpdbjobs\"";
+    $AVAILABLEMEDIABIN = "\"$nbu_installdir\\NetBackup\\bin\\goodies\\available_media\"";
+    $GETLICENSEKEYBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\get_license_key\"";
+    $BPCONFIGBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpconfig\"";
+    $BPSYNCINFOBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpsyncinfo\"";
 } elsif (($OS =~ /darwin/) or ($OS eq "linux")) {
     my $nbu_installdir = "/usr/openv/netbackup";
     $BPPLLISTBIN = $nbu_installdir."/bin/admincmd/bppllist";
     $BPDBJOBSBIN = $nbu_installdir."/bin/admincmd/bpdbjobs";
+    $AVAILABLEMEDIABIN = $nbu_installdir."/bin/goodies/available_media";
+    $GETLICENSEKEYBIN = $nbu_installdir."/bin/admincmd/get_license_key";
+    $BPCONFIGBIN = $nbu_installdir."/bin/admincmd/bpconfig";
+    $BPSYNCINFOBIN = $nbu_installdir."/bin/admincmd/bpsyncinfo";
 }
 my %commands = (
-    "bpdbjobs"      => ["$BPDBJOBSBIN", "-report -all_columns"],
-    "bppllist"      => ["$BPPLLISTBIN", ""],
+    "bpdbjobs"          => ["$BPDBJOBSBIN", "-report -all_columns"],
+    "bppllist"          => ["$BPPLLISTBIN", ""],
+    "available_media"   => ["$AVAILABLEMEDIABIN", ""],
+    "get_license_key"   => ["$GETLICENSEKEYBIN", "-L features"],
+    "get_license_key"   => ["$GETLICENSEKEYBIN", "-L keys"],
+    "bpconfig"          => ["$BPCONFIGBIN", "-U"],
+    "bpsyncinfo"        => ["$BPSYNCINFOBIN", "-U"],
 );
 
 
