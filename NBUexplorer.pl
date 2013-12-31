@@ -105,19 +105,14 @@ sub main {
     my $filename;
 
     foreach my $command (keys %commands) {
-        print "For command: $command, do:\n";
         my $binary = "$commands{$command}[0]";
-        print "\tBinary: $binary\n";
         
         my $longcmd = "@{$commands{$command}}";
-        print "\tLongcmd: $longcmd\n";
         
         my $filename = mk_zipped_filename($longcmd);
-        print "\tFilename: $dir/$filename\n";
 
         if (-e $binary) {
-            print "Binary exists, doing something\n";
-            print "DUMPDIR IS NOW: $dir, AND FILENAME IS NOW: $filename\n";
+            print "Binary $binary exists, executing and dumping to $dir/$filename .. \n";
             my $fh = IO::Zlib->new("$dir/$filename", "wb");
             if (defined $fh) {
                 print $fh qx($longcmd);
