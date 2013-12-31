@@ -51,13 +51,12 @@ if ($OS eq "MSWin32") {
     $BPSYNCINFOBIN = $nbu_installdir."/bin/admincmd/bpsyncinfo";
 }
 my %commands = (
-    "bpdbjobs"          => ["$BPDBJOBSBIN", "-report -all_columns"],
-    "bppllist"          => ["$BPPLLISTBIN", ""],
-    "available_media"   => ["$AVAILABLEMEDIABIN", ""],
-    "get_license_key"   => ["$GETLICENSEKEYBIN", "-L features"],
-    "get_license_key"   => ["$GETLICENSEKEYBIN", "-L keys"],
-    "bpconfig"          => ["$BPCONFIGBIN", "-U"],
-    "bpsyncinfo"        => ["$BPSYNCINFOBIN", "-U"],
+    "bpdbjobs"                      => ["$BPDBJOBSBIN", "-report -all_columns"],
+    "bppllist"                      => ["$BPPLLISTBIN", ""],
+    "available_media"               => ["$AVAILABLEMEDIABIN", ""],
+    "get_license_key_features"      => ["$GETLICENSEKEYBIN", "-L features"],
+    "get_license_key_keys"          => ["$GETLICENSEKEYBIN", "-L keys"],
+    "bpconfig"                      => ["$BPCONFIGBIN", "-U"],
 );
 
 
@@ -124,16 +123,14 @@ sub main {
     # Main logic
     my @files;
     my $dir = mk_dumpdir();
-    my $binary;
-    my $longcmd;
-    my $filename;
-
-    foreach my $command (keys %commands) {
+    for my $command (keys %commands) {
         my $binary = "$commands{$command}[0]";
 
-        my $longcmd = "@{$commands{$command}}";
-
+        my $longcmd = "$commands{$command}[0] $commands{$command}[1]";
+        print "Longcmd: $longcmd\n";
         my $filename = mk_zipped_filename($longcmd);
+
+        print "Evaulating if [$longcmd] is to be run..\n";
 
         if (-e $binary) {
             print "Binary $binary exists, executing [$longcmd] and dumping to $dir/$filename .. \n";
