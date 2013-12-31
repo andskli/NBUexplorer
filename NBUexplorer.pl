@@ -94,6 +94,13 @@ sub mk_zipped_filename {
 
 sub dump_to_zip {
     # Execute command and dump to zip
+    # First argument is command, second is outputfile
+    my $fh = IO::Zlib->new("$_[1]", "wb");
+    if (defined $fh) {
+        print $fh qx($_[0]);
+    }
+    $fh->close;
+    return $_[1];
 }
 
 sub main {
@@ -112,12 +119,8 @@ sub main {
         my $filename = mk_zipped_filename($longcmd);
 
         if (-e $binary) {
-            print "Binary $binary exists, executing and dumping to $dir/$filename .. \n";
-            my $fh = IO::Zlib->new("$dir/$filename", "wb");
-            if (defined $fh) {
-                print $fh qx($longcmd);
-            }
-            $fh->close;
+            print "Binary $binary exists, executing [$longcmd] and dumping to $dir/$filename .. \n";
+            dump_to_zip($longcmd, "$dir/$filename");
             push(@files, $filename);  # Insert generated file path into @files
         }
     }
