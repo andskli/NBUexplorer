@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# NBUexplorer - SUNWexplorer like utility for NetBackup environments
+# NBUexplorer - SUNWexplo like utility for NetBackup environments
 #
 # Author: Andreas Lindh <andreas@superblock.se>
 #
