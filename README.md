@@ -1,8 +1,4 @@
 NBUexplorer
 ===========
 
-NetBackup explorer script
-
-# TODO
-
-- Add upload functionality
+NetBackup explorer script. Dumps info into gzipped files much like SUNWexplo.
