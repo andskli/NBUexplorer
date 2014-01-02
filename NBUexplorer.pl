@@ -98,7 +98,7 @@ output_usage() if ($help);
 
 sub mk_dumpdir {
     # Return formatted timestamp
-    my $dir = "$dumpdir/dump_$dumptime";
+    my $dir = "$dumpdir/$HOSTNAME_dump_$dumptime";
     mkdir $dir unless (-d $dir);
     return "$dir";
 }
@@ -113,7 +113,7 @@ sub mk_zipped_filename {
     } elsif (($OS =~ /darwin/) or ($OS eq "linux")) {
         $ending = "gz";
     }
-    return "$filebasename.$dumptime.out.$ending";
+    return "$HOSTNAME.$filebasename.$dumptime.out.$ending";
 }
 
 sub dump_to_zip {
