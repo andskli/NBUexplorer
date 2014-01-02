@@ -18,7 +18,7 @@ use File::Path qw(rmtree);
 use Sys::Hostname;
 use Data::Dumper;
 use IO::Zlib;
-use Cwd;
+
 
 # Set some global vars
 my $OS = $^O;
