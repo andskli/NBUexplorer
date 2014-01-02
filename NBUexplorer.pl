@@ -32,6 +32,8 @@ my $BPCONFIGBIN;
 my $BPSYNCINFOBIN;
 my $BPMEDIALISTBIN;
 my $BPIMAGELISTBIN;
+my $BPGETCONFIGBIN;
+my $BPERRORBIN;
 if ($OS eq "MSWin32") {
     if (!$ENV{'NBU_INSTALLDIR'}) {
         die "Could not find NBU_INSTALLDIR environment variable\n";
@@ -46,6 +48,8 @@ if ($OS eq "MSWin32") {
     $BPSYNCINFOBIN              = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpsyncinfo\"";
     $BPMEDIALISTBIN             = "\"$nbu_installdir\\NetBackup\\bin\admincmd\\bpmedialist\"";
     $BPIMAGELISTBIN             = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpimagelist\"";
+    $BPGETCONFIGBIN             = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpgetconfig\"";
+    $BPERRORBIN                 = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bperror\"";
 } elsif (($OS =~ /darwin/) or ($OS eq "linux")) {
     my $nbu_installdir = "/usr/openv/netbackup";
     $BPPLLISTBIN                = $nbu_installdir."/bin/admincmd/bppllist";
@@ -56,6 +60,8 @@ if ($OS eq "MSWin32") {
     $BPSYNCINFOBIN              = $nbu_installdir."/bin/admincmd/bpsyncinfo";
     $BPMEDIALISTBIN             = $nbu_installdir."/bin/admincmd/bpmedialist";
     $BPIMAGELISTBIN             = $nbu_installdir."/bin/admincmd/bpimagelist";
+    $BPGETCONFIGBIN             = $nbu_installdir."/bin/admincmd/bpgetconfig";
+    $BPERRORBIN                 = $nbu_installdir."/bin/admincmd/bperror";
 }
 my %commands = (
     "bpdbjobs_report_allcolumns"        => ["$BPDBJOBSBIN", "-report -all_columns"],
@@ -69,6 +75,10 @@ my %commands = (
     "bpemdialist_summary_brief"         => ["$BPMEDIALISTBIN", "-summary -brief"],
     "bpimagelist_A_d_fromepoch"         => ["$BPIMAGELISTBIN", "-A -d 01/30/00 00:00:00"],
     "bpimagelist_A_media_d_fromepoch"   => ["$BPIMAGELISTBIN", "-A -media -d 01/30/00 00:00:00"],
+    "bpgetconfig"                       => ["$BPGETCONFIGBIN", ""],
+    "bperror_U_all_d_fromepoch"         => ["$BPERRORBIN", "-U -all -d 01/30/00 00:00:00"],
+    "bperror_U_media_d_fromepoch"       => ["$BPERRORBIN", "-U -media -d 01/30/00 00:00:00"],
+
 );
 
 
