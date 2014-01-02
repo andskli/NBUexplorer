@@ -11,10 +11,11 @@ use strict qw(vars subs);
 use warnings;
 use Getopt::Long;
 use File::Basename;
+use File::Path qw(rmtree);
 use Sys::Hostname;
 use Data::Dumper;
 use IO::Zlib;
-
+use Cwd;
 
 # Set some global vars
 my $OS = $^O;
@@ -37,24 +38,24 @@ if ($OS eq "MSWin32") {
     }
     my $nbu_installdir = "$ENV{'NBU_INSTALLDIR'}";
     chomp($nbu_installdir);
-    $BPPLLISTBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bppllist\"";
-    $BPDBJOBSBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpdbjobs\"";
-    $AVAILABLEMEDIABIN = "\"$nbu_installdir\\NetBackup\\bin\\goodies\\available_media\"";
-    $GETLICENSEKEYBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\get_license_key\"";
-    $BPCONFIGBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpconfig\"";
-    $BPSYNCINFOBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpsyncinfo\"";
-    $BPMEDIALISTBIN = "\"$nbu_installdir\\NetBackup\\bin\admincmd\\bpmedialist\"";
-    $BPIMAGELISTBIN = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpimagelist\"";
+    $BPPLLISTBIN                = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bppllist\"";
+    $BPDBJOBSBIN                = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpdbjobs\"";
+    $AVAILABLEMEDIABIN          = "\"$nbu_installdir\\NetBackup\\bin\\goodies\\available_media\"";
+    $GETLICENSEKEYBIN           = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\get_license_key\"";
+    $BPCONFIGBIN                = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpconfig\"";
+    $BPSYNCINFOBIN              = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpsyncinfo\"";
+    $BPMEDIALISTBIN             = "\"$nbu_installdir\\NetBackup\\bin\admincmd\\bpmedialist\"";
+    $BPIMAGELISTBIN             = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpimagelist\"";
 } elsif (($OS =~ /darwin/) or ($OS eq "linux")) {
     my $nbu_installdir = "/usr/openv/netbackup";
-    $BPPLLISTBIN = $nbu_installdir."/bin/admincmd/bppllist";
-    $BPDBJOBSBIN = $nbu_installdir."/bin/admincmd/bpdbjobs";
-    $AVAILABLEMEDIABIN = $nbu_installdir."/bin/goodies/available_media";
-    $GETLICENSEKEYBIN = $nbu_installdir."/bin/admincmd/get_license_key";
-    $BPCONFIGBIN = $nbu_installdir."/bin/admincmd/bpconfig";
-    $BPSYNCINFOBIN = $nbu_installdir."/bin/admincmd/bpsyncinfo";
-    $BPMEDIALISTBIN = $nbu_installdir."/bin/admincmd/bpmedialist";
-    $BPIMAGELISTBIN = $nbu_installdir."/bin/admincmd/bpimagelist";
+    $BPPLLISTBIN                = $nbu_installdir."/bin/admincmd/bppllist";
+    $BPDBJOBSBIN                = $nbu_installdir."/bin/admincmd/bpdbjobs";
+    $AVAILABLEMEDIABIN          = $nbu_installdir."/bin/goodies/available_media";
+    $GETLICENSEKEYBIN           = $nbu_installdir."/bin/admincmd/get_license_key";
+    $BPCONFIGBIN                = $nbu_installdir."/bin/admincmd/bpconfig";
+    $BPSYNCINFOBIN              = $nbu_installdir."/bin/admincmd/bpsyncinfo";
+    $BPMEDIALISTBIN             = $nbu_installdir."/bin/admincmd/bpmedialist";
+    $BPIMAGELISTBIN             = $nbu_installdir."/bin/admincmd/bpimagelist";
 }
 my %commands = (
     "bpdbjobs_report_allcolumns"        => ["$BPDBJOBSBIN", "-report -all_columns"],
@@ -73,9 +74,11 @@ my %commands = (
 
 my %opt;
 my $help;
+my $deleteold;
 my $getoptresult = GetOptions(\%opt,
-    "help|h|?" => \$help,
-    "dir|d=s" => \$dumpdir,
+    "help|h|?"          => \$help,
+    "dir|d=s"           => \$dumpdir,
+    "delold=s"        => \$deleteold,
 );
 
 sub output_usage {
@@ -87,6 +90,7 @@ Options:
 
     -d | --dir          : Directory to dump to. Uses current directory if none
                         specified.
+    --delold <hours>    : Remove directories found in topdir older than hours.
 
 };
     die $usage;
@@ -98,7 +102,7 @@ output_usage() if ($help);
 
 sub mk_dumpdir {
     # Return formatted timestamp
-    my $dir = "$dumpdir/$HOSTNAME_dump_$dumptime";
+    my $dir = "$dumpdir/$HOSTNAME"."_dump_".$dumptime;
     mkdir $dir unless (-d $dir);
     return "$dir";
 }
@@ -116,6 +120,7 @@ sub mk_zipped_filename {
     return "$HOSTNAME.$filebasename.$dumptime.out.$ending";
 }
 
+
 sub dump_to_zip {
     # Execute command and dump to zip
     # First argument is command, second is outputfile
@@ -127,6 +132,27 @@ sub dump_to_zip {
     return $_[1];
 }
 
+
+sub find_olddirs {
+    # First argument passed to this function should be unixtime
+    my $delbefore = $_[0];
+    my @directories_to_del;
+    opendir(DIR, $dumpdir) or die "Could not open $dumpdir: $!\n";
+    while (my $d = readdir(DIR)) {
+        if (-d $d) {
+            if ($d =~ m/.*\_.*\_([0-9]+)$/) {
+                my $t = $1;
+                if ($t < $delbefore) {
+                    print "Found directory to remove: $d (time $t)\n";
+                    push(@directories_to_del, $d);
+                }
+            }
+       }
+    }
+    return @directories_to_del;
+}
+
+
 sub main {
     # Main logic
     my @files;
@@ -135,15 +161,21 @@ sub main {
         my $binary = "$commands{$command}[0]";
 
         my $longcmd = "$commands{$command}[0] $commands{$command}[1]";
-        print "Longcmd: $longcmd\n";
         my $filename = mk_zipped_filename($command);
-
-        print "Evaulating if [$longcmd] is to be run..\n";
 
         if (-e $binary) {
             print "Binary $binary exists, executing [$longcmd] and dumping to $dir/$filename .. \n";
             dump_to_zip($longcmd, "$dir/$filename");
             push(@files, $filename);  # Insert generated file path into @files
+        }
+    }
+    if ($deleteold) {
+        my $olddate = time() - ($deleteold * 60 * 60);
+        print "Trying to delete directories created before: ".localtime($olddate)."\n";
+        my @directories_to_del = find_olddirs($olddate);
+        foreach my $d (@directories_to_del) {
+            print "Removing directory $d\n";
+            rmtree($d) or warn "Could not remove $d: $!\n";
         }
     }
 }
