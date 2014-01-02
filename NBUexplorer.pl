@@ -2,6 +2,9 @@
 #
 # NBUexplorer - SUNWexplo like utility for NetBackup environments
 #
+# This script should be executed with sudo permissions or as root so that
+# the necessary commands can be run successfully.
+#
 # Author: Andreas Lindh <andreas@superblock.se>
 #
 
