@@ -34,6 +34,16 @@ my $BPMEDIALISTBIN;
 my $BPIMAGELISTBIN;
 my $BPGETCONFIGBIN;
 my $BPERRORBIN;
+my $BPCLLISTBIN;
+my $BPIMMEDIABIN;
+my $BPSTULISTBIN;
+my $BPPSBIN;
+my $BPCLIMAGELISTBIN;
+my $VMQUERYBIN;
+my $VMPOOLBIN;
+my $VMRULEBIN;
+my $TPCLEANBIN;
+my $CRCONTROLBIN;
 if ($OS eq "MSWin32") {
     if (!$ENV{'NBU_INSTALLDIR'}) {
         die "Could not find NBU_INSTALLDIR environment variable\n";
@@ -50,6 +60,16 @@ if ($OS eq "MSWin32") {
     $BPIMAGELISTBIN             = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpimagelist\"";
     $BPGETCONFIGBIN             = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpgetconfig\"";
     $BPERRORBIN                 = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bperror\"";
+    $BPCLLISTBIN                = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpcllist\"";
+    $BPIMMEDIABIN               = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpimmedia\"";
+    $BPSTULISTBIN               = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpstulist\"";
+    $BPPSBIN                    = "\"$nbu_installdir\\NetBackup\\bin\\bpps\"";
+    $BPCLIMAGELISTBIN           = "\"$nbu_installdir\\NetBackup\\bin\\bpclimagelist\"";
+    $VMQUERYBIN                 = "\"$nbu_installdir\\Volmgr\\bin\\vmquery\"";
+    $VMPOOLBIN                  = "\"$nbu_installdir\\Volmgr\\bin\\vmpool\"";
+    $VMRULEBIN                  = "\"$nbu_installdir\\Volmgr\\bin\\vmrule\"";
+    $TPCLEANBIN                 = "\"$nbu_installdir\\Volmgr\\bin\\tpclean\"";
+    $CRCONTROLBIN               = "\"$nbu_installdir\\pdde\\pdcr\\bin\\crcontrol\"";
 } elsif (($OS =~ /darwin/) or ($OS eq "linux")) {
     my $nbu_installdir = "/usr/openv/netbackup";
     $BPPLLISTBIN                = $nbu_installdir."/bin/admincmd/bppllist";
@@ -62,23 +82,50 @@ if ($OS eq "MSWin32") {
     $BPIMAGELISTBIN             = $nbu_installdir."/bin/admincmd/bpimagelist";
     $BPGETCONFIGBIN             = $nbu_installdir."/bin/admincmd/bpgetconfig";
     $BPERRORBIN                 = $nbu_installdir."/bin/admincmd/bperror";
+    $BPCLLISTBIN                = $nbu_installdir."/bin/admincmd/bpcllist";
+    $BPIMMEDIABIN               = $nbu_installdir."/bin/admincmd/bpimmedia";
+    $BPSTULISTBIN               = $nbu_installdir."/bin/admincmd/bpstulist";
+    $BPPSBIN                    = $nbu_installdir."/bin/bpps";
+    $BPCLIMAGELISTBIN           = $nbu_installdir."/bin/bpclimagelist";
+    $VMQUERYBIN                 = "/usr/openv/volmgr/bin/vmquery";
+    $VMPOOLBIN                  = "/usr/openv/volmgr/bin/vmpool";
+    $VMRULEBIN                  = "/usr/openv/volmgr/bin/vmrule";
+    $TPCLEANBIN                 = "/usr/openv/volmgr/bin/tpclean";
+    $CRCONTROLBIN               = "/usr/openv/pdde/pdcr/bin/crcontrol";
 }
 my %commands = (
     "bpdbjobs_report_allcolumns"        => ["$BPDBJOBSBIN", "-report -all_columns"],
     "bppllist_allpolicies_U"            => ["$BPPLLISTBIN", "-allpolicies -U"],
+    "bppllist_allpolicies"              => ["$BPPLLISTBIN", "-allpolicies"],
     "available_media"                   => ["$AVAILABLEMEDIABIN", ""],
     "get_license_key_features"          => ["$GETLICENSEKEYBIN", "-L features"],
     "get_license_key_keys"              => ["$GETLICENSEKEYBIN", "-L keys"],
     "bpconfig_U"                        => ["$BPCONFIGBIN", "-U"],
-    "bpmedialist_U_mlist"               => ["$BPMEDIALISTBIN", "-U -mlist"],
+    "bpmedialist_mlist"                 => ["$BPMEDIALISTBIN", "-mlist"],
     "bpmedialist_summary"               => ["$BPMEDIALISTBIN", "-summary"],
     "bpemdialist_summary_brief"         => ["$BPMEDIALISTBIN", "-summary -brief"],
     "bpimagelist_A_d_fromepoch"         => ["$BPIMAGELISTBIN", "-A -d 01/30/00 00:00:00"],
     "bpimagelist_A_media_d_fromepoch"   => ["$BPIMAGELISTBIN", "-A -media -d 01/30/00 00:00:00"],
     "bpgetconfig"                       => ["$BPGETCONFIGBIN", ""],
-    "bperror_U_all_d_fromepoch"         => ["$BPERRORBIN", "-U -all -d 01/30/00 00:00:00"],
-    "bperror_U_media_d_fromepoch"       => ["$BPERRORBIN", "-U -media -d 01/30/00 00:00:00"],
-
+    "bperror_all_d_fromepoch"           => ["$BPERRORBIN", "-all -d 01/30/00 00:00:00"],
+    "bperror_media_d_fromepoch"         => ["$BPERRORBIN", "-media -d 01/30/00 00:00:00"],
+    "bpcllist_allclasses_U"             => ["$BPCLLISTBIN", "-allclasses -U"],
+    "bpimmedia_U"                       => ["$BPIMMEDIABIN", "-U"],
+    "bpimmedia"                         => ["$BPIMMEDIABIN", ""],
+    "bpstulist_U"                       => ["$BPSTULISTBIN", "-U"],
+    "bpstulist_l"                       => ["$BPSTULISTBIN", "-l"],
+    "bpps_a"                            => ["$BPPSBIN", "-a"],
+    "bpclimagelist"                     => ["$BPCLIMAGELISTBIN", ""],
+    "vmquery_a"                         => ["$VMQUERYBIN", "-a"],
+    "vmquery_a_bx"                      => ["$VMQUERYBIN", "-a -bx"],
+    "vmquery -a -w"                     => ["$VMQUERYBIN", "-a -w"],
+    "vmpool_listall"                    => ["$VMPOOLBIN", "-listall"],
+    "vmrule_listall"                    => ["$VMRULEBIN", "-listall"],
+    "tpclean_L"                         => ["$TPCLEANBIN", "-L"],
+    "crcontrol_getmode"                 => ["$CRCONTROLBIN", "--getmode"],
+    "crcontrol_dsstat"                  => ["$CRCONTROLBIN", "--dsstat"],
+    "crcontrol_processqueueinfo"        => ["$CRCONTROLBIN", "--processqueueinfo"],
+    "crcontrol_queueinfo"               => ["$CRCONTROLBIN", "--queueinfo"],
 );
 
 
