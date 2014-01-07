@@ -42,6 +42,7 @@ my $BPIMMEDIABIN;
 my $BPSTULISTBIN;
 my $BPPSBIN;
 my $BPCLIMAGELISTBIN;
+my $NBSTLUTILBIN;
 my $VMQUERYBIN;
 my $VMPOOLBIN;
 my $VMRULEBIN;
@@ -68,6 +69,7 @@ if ($OS eq "MSWin32") {
     $BPSTULISTBIN               = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpstulist.exe";
     $BPPSBIN                    = "$nbu_installdir\\NetBackup\\bin\\bpps.exe";
     $BPCLIMAGELISTBIN           = "$nbu_installdir\\NetBackup\\bin\\bpclimagelist.exe";
+    $NBSTLUTILBIN               = "$nbu_installdir\\NetBackup\\bin\\admincmd\\nbstlutil.exe";
     $VMQUERYBIN                 = "$nbu_installdir\\Volmgr\\bin\\vmquery.exe";
     $VMPOOLBIN                  = "$nbu_installdir\\Volmgr\\bin\\vmpool.exe";
     $VMRULEBIN                  = "$nbu_installdir\\Volmgr\\bin\\vmrule.exe";
@@ -88,6 +90,7 @@ if ($OS eq "MSWin32") {
     $BPSTULISTBIN               = $nbu_installdir."/bin/admincmd/bpstulist";
     $BPPSBIN                    = $nbu_installdir."/bin/bpps";
     $BPCLIMAGELISTBIN           = $nbu_installdir."/bin/bpclimagelist";
+    $NBSTLUTILBIN               = $nbu_installdir."/bin/admincmd/nbstlutil";
     $VMQUERYBIN                 = "/usr/openv/volmgr/bin/vmquery";
     $VMPOOLBIN                  = "/usr/openv/volmgr/bin/vmpool";
     $VMRULEBIN                  = "/usr/openv/volmgr/bin/vmrule";
@@ -116,6 +119,8 @@ my %commands = (
     "bpstulist_l"                       => ["$BPSTULISTBIN", "-l"],
     "bpps"                              => ["$BPPSBIN", ""],
     "bpclimagelist"                     => ["$BPCLIMAGELISTBIN", ""],
+    "nbstlutil_list_imgincomplete"      => ["$NBSTLUTILBIN", "list -l -image_incomplete"],
+    "nbstlutil_list_imginactive"        => ["$NBSTLUTILBIN", "list -l -image_inactive"],
     "vmquery_a"                         => ["$VMQUERYBIN", "-a"],
     "vmquery_a_bx"                      => ["$VMQUERYBIN", "-a -bx"],
     "vmquery -a -w"                     => ["$VMQUERYBIN", "-a -w"],
