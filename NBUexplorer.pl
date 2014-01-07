@@ -34,6 +34,7 @@ my $GETLICENSEKEYBIN;
 my $BPCONFIGBIN;
 my $BPSYNCINFOBIN;
 my $BPMEDIALISTBIN;
+my $BPMINLICENSEBIN;
 my $BPIMAGELISTBIN;
 my $BPGETCONFIGBIN;
 my $BPERRORBIN;
@@ -57,11 +58,12 @@ if ($OS eq "MSWin32") {
 
     $BPPLLISTBIN                = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bppllist.exe";
     $BPDBJOBSBIN                = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpdbjobs.exe";
-    $AVAILABLEMEDIABIN          = "$nbu_installdir\\NetBackup\\bin\\goodies\\available_media.exe";
+    $AVAILABLEMEDIABIN          = "$nbu_installdir\\NetBackup\\bin\\goodies\\available_media.cmd";
     $GETLICENSEKEYBIN           = "$nbu_installdir\\NetBackup\\bin\\admincmd\\get_license_key.exe";
     $BPCONFIGBIN                = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpconfig.exe";
     $BPSYNCINFOBIN              = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpsyncinfo.exe";
     $BPMEDIALISTBIN             = "$nbu_installdir\\NetBackup\\bin\admincmd\\bpmedialist.exe";
+    $BPMINLICENSEBIN            = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpminlicense.exe";
     $BPIMAGELISTBIN             = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpimagelist.exe";
     $BPGETCONFIGBIN             = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpgetconfig.exe";
     $BPERRORBIN                 = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bperror.exe";
@@ -131,6 +133,8 @@ my %commands = (
     "crcontrol_dsstat"                  => ["$CRCONTROLBIN", "--dsstat"],
     "crcontrol_processqueueinfo"        => ["$CRCONTROLBIN", "--processqueueinfo"],
     "crcontrol_queueinfo"               => ["$CRCONTROLBIN", "--queueinfo"],
+    "bpminlicense_list_keys_verbose"    => ["$BPMINLICENSEBIN", "-list_keys -verbose"],
+    "bpminlicense_nbfeatures_verbose"   => ["$BPMINLICENSEBIN", "-nb_features -verbose"],
 );
 
 
