@@ -32,7 +32,6 @@ my $BPPLLISTBIN;
 my $AVAILABLEMEDIABIN;
 my $GETLICENSEKEYBIN;
 my $BPCONFIGBIN;
-my $BPSYNCINFOBIN;
 my $BPMEDIALISTBIN;
 my $BPMINLICENSEBIN;
 my $BPIMAGELISTBIN;
@@ -60,7 +59,6 @@ if ($OS eq "MSWin32") {
     $BPDBJOBSBIN                = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpdbjobs.exe";
     $AVAILABLEMEDIABIN          = "$nbu_installdir\\NetBackup\\bin\\goodies\\available_media.cmd";
     $BPCONFIGBIN                = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpconfig.exe";
-    $BPSYNCINFOBIN              = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpsyncinfo.exe";
     $BPMEDIALISTBIN             = "$nbu_installdir\\NetBackup\\bin\admincmd\\bpmedialist.exe";
     $BPMINLICENSEBIN            = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpminlicense.exe";
     $BPIMAGELISTBIN             = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpimagelist.exe";
@@ -83,7 +81,6 @@ if ($OS eq "MSWin32") {
     $AVAILABLEMEDIABIN          = $nbu_installdir."/bin/goodies/available_media";
     $GETLICENSEKEYBIN           = $nbu_installdir."/bin/admincmd/get_license_key";
     $BPCONFIGBIN                = $nbu_installdir."/bin/admincmd/bpconfig";
-    $BPSYNCINFOBIN              = $nbu_installdir."/bin/admincmd/bpsyncinfo";
     $BPMEDIALISTBIN             = $nbu_installdir."/bin/admincmd/bpmedialist";
     $BPIMAGELISTBIN             = $nbu_installdir."/bin/admincmd/bpimagelist";
     $BPGETCONFIGBIN             = $nbu_installdir."/bin/admincmd/bpgetconfig";
