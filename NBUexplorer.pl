@@ -60,7 +60,7 @@ if ($OS eq "MSWin32") {
     $BPDBJOBSBIN                = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpdbjobs.exe";
     $AVAILABLEMEDIABIN          = "$nbu_installdir\\NetBackup\\bin\\goodies\\available_media.cmd";
     $BPCONFIGBIN                = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpconfig.exe";
-    $BPMEDIALISTBIN             = "$nbu_installdir\\NetBackup\\bin\admincmd\\bpmedialist.exe";
+    $BPMEDIALISTBIN             = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpmedialist.exe";
     $BPMINLICENSEBIN            = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpminlicense.exe";
     $BPIMAGELISTBIN             = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpimagelist.exe";
     $BPGETCONFIGBIN             = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpgetconfig.exe";
