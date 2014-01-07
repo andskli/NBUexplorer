@@ -53,6 +53,8 @@ if ($OS eq "MSWin32") {
     }
     my $nbu_installdir = "$ENV{'NBU_INSTALLDIR'}";
     chomp($nbu_installdir);
+    $nbu_installdir =~ s/^(.*?)\\$/$1/g;  # Remove trailing backslashes
+
     $BPPLLISTBIN                = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bppllist\"";
     $BPDBJOBSBIN                = "\"$nbu_installdir\\NetBackup\\bin\\admincmd\\bpdbjobs\"";
     $AVAILABLEMEDIABIN          = "\"$nbu_installdir\\NetBackup\\bin\\goodies\\available_media\"";
