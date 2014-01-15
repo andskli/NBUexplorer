@@ -85,6 +85,7 @@ if ($OS eq "MSWin32") {
     $GETLICENSEKEYBIN           = $nbu_installdir."/bin/admincmd/get_license_key";
     $BPCONFIGBIN                = $nbu_installdir."/bin/admincmd/bpconfig";
     $BPMEDIALISTBIN             = $nbu_installdir."/bin/admincmd/bpmedialist";
+    $BPMINLICENSEBIN            = $nbu_installdir."/bin/admincmd/bpminlicense";
     $BPIMAGELISTBIN             = $nbu_installdir."/bin/admincmd/bpimagelist";
     $BPGETCONFIGBIN             = $nbu_installdir."/bin/admincmd/bpgetconfig";
     $BPERRORBIN                 = $nbu_installdir."/bin/admincmd/bperror";
