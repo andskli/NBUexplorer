@@ -31,6 +31,7 @@ my $BPDBJOBSBIN;
 my $BPPLLISTBIN;
 my $AVAILABLEMEDIABIN;
 my $GETLICENSEKEYBIN;
+my $BPCLIENTBIN;
 my $BPCONFIGBIN;
 my $BPMEDIALISTBIN;
 my $BPMINLICENSEBIN;
@@ -60,6 +61,7 @@ if ($OS eq "MSWin32") {
     $BPPLLISTBIN                = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bppllist.exe";
     $BPDBJOBSBIN                = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpdbjobs.exe";
     $AVAILABLEMEDIABIN          = "$nbu_installdir\\NetBackup\\bin\\goodies\\available_media.cmd";
+    $BPCLIENTBIN                = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpclient.exe";
     $BPCONFIGBIN                = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpconfig.exe";
     $BPMEDIALISTBIN             = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpmedialist.exe";
     $BPMINLICENSEBIN            = "$nbu_installdir\\NetBackup\\bin\\admincmd\\bpminlicense.exe";
@@ -83,6 +85,7 @@ if ($OS eq "MSWin32") {
     $BPDBJOBSBIN                = $nbu_installdir."/bin/admincmd/bpdbjobs";
     $AVAILABLEMEDIABIN          = $nbu_installdir."/bin/goodies/available_media";
     $GETLICENSEKEYBIN           = $nbu_installdir."/bin/admincmd/get_license_key";
+    $BPCLIENTBIN                = $nbu_installdir."/bin/admincmd/bpclient";
     $BPCONFIGBIN                = $nbu_installdir."/bin/admincmd/bpconfig";
     $BPMEDIALISTBIN             = $nbu_installdir."/bin/admincmd/bpmedialist";
     $BPMINLICENSEBIN            = $nbu_installdir."/bin/admincmd/bpminlicense";
@@ -108,6 +111,7 @@ my %commands = (
     "available_media"                   => ["$AVAILABLEMEDIABIN", ""],
     "get_license_key_features"          => ["$GETLICENSEKEYBIN", "-L features"],
     "get_license_key_keys"              => ["$GETLICENSEKEYBIN", "-L keys"],
+    "bpclient_All_L"                    => ["$BPCLIENTBIN", "-All -L"],
     "bpconfig_U"                        => ["$BPCONFIGBIN", "-U"],
     "bpmedialist_mlist"                 => ["$BPMEDIALISTBIN", "-mlist"],
     "bpmedialist_summary"               => ["$BPMEDIALISTBIN", "-summary"],
