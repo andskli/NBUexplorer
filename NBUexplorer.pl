@@ -79,7 +79,7 @@ if ($OS eq "MSWin32") {
     $VMRULEBIN                  = "$nbu_installdir\\Volmgr\\bin\\vmrule.exe";
     $TPCLEANBIN                 = "$nbu_installdir\\Volmgr\\bin\\tpclean.exe";
     $CRCONTROLBIN               = "$nbu_installdir\\pdde\\pdcr\\bin\\crcontrol.exe";
-} elsif (($OS =~ /darwin/) or ($OS eq "linux")) {
+} elsif ($OS eq "linux") {
     my $nbu_installdir = "/usr/openv/netbackup";
     $BPPLLISTBIN                = $nbu_installdir."/bin/admincmd/bppllist";
     $BPDBJOBSBIN                = $nbu_installdir."/bin/admincmd/bpdbjobs";
